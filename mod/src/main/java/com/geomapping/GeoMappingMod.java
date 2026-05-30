@@ -25,7 +25,7 @@ public class GeoMappingMod implements ModInitializer {
         LOGGER.info("GeoMapping mod initializing...");
 
         UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
-            if (world.isClient) return ActionResult.PASS;
+            if (world.isClient()) return ActionResult.PASS;
             if (player.getStackInHand(hand).isEmpty()) return ActionResult.PASS;
 
             BlockPos pos = hitResult.getBlockPos().offset(hitResult.getSide());

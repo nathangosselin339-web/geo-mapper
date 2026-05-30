@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "geomapping",
+  "version": "1.0.0",
+  "name": "GeoMapping",
+  "description": "Sends block placement data to the Python GeoMapper tool",
+  "authors": ["McGeoMapping"],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/geomapping/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["com.geomapping.GeoMappingMod"]
+  },
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "fabric-api": "*",
+    "minecraft": ">=1.21"
+  }
+}

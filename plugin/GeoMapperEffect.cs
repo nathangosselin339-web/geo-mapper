@@ -6,11 +6,13 @@ using PaintDotNet.Rendering;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
+using System.Windows.Forms;
 
 namespace GeoMapperPlugin;
 
@@ -119,6 +121,10 @@ internal sealed class GeoMapperEffect : PropertyBasedBitmapEffect
     private static int activeOriginZ;
     private static double activeScale = 1.0;
 
+    private static System.Windows.Forms.Timer? refreshTimer;
+    private static bool isRealtimeEnabled;
+    private static PropertyBasedEffectConfigToken? realtimeToken;
+
     static GeoMapperEffect()
     {
         BlockCount = BlockColors.Length;
@@ -152,6 +158,50 @@ internal sealed class GeoMapperEffect : PropertyBasedBitmapEffect
             }
         }
         return BlockNames[bestIndex];
+    }
+
+    private static void StartRefreshTimer()
+    {
+        if (refreshTimer is not null)
+            return;
+
+        refreshTimer = new System.Windows.Forms.Timer();
+        refreshTimer.Interval = 500;
+        refreshTimer.Tick += OnRefreshTick;
+        refreshTimer.Start();
+    }
+
+    private static void StopRefreshTimer()
+    {
+        if (refreshTimer is not null)
+        {
+            refreshTimer.Stop();
+            refreshTimer.Dispose();
+            refreshTimer = null;
+        }
+        isRealtimeEnabled = false;
+    }
+
+    private static void OnRefreshTick(object? sender, EventArgs e)
+    {
+        if (!isRealtimeEnabled || realtimeToken is null)
+        {
+            StopRefreshTimer();
+            return;
+        }
+
+        var form = Application.OpenForms.OfType<EffectConfigForm>().FirstOrDefault();
+        if (form is null || form.IsDisposed)
+        {
+            StopRefreshTimer();
+            return;
+        }
+
+        var newToken = (PropertyBasedEffectConfigToken)realtimeToken.Clone();
+        int nextTick = realtimeToken.GetProperty<Int32Property>(PropertyNames.RefreshTick)!.Value + 1;
+        newToken.SetPropertyValue(PropertyNames.RefreshTick, nextTick);
+        form.Token = newToken;
+        realtimeToken = newToken;
     }
 
     private static void StartTcpListener(int port, int originX, int originZ, double scale)
@@ -232,7 +282,9 @@ internal sealed class GeoMapperEffect : PropertyBasedBitmapEffect
         Port,
         OriginX,
         OriginZ,
-        Scale
+        Scale,
+        RealTime,
+        RefreshTick
     }
 
     public GeoMapperEffect()
@@ -253,6 +305,8 @@ internal sealed class GeoMapperEffect : PropertyBasedBitmapEffect
         props.Add(new Int32Property(PropertyNames.OriginX, 0));
         props.Add(new Int32Property(PropertyNames.OriginZ, 0));
         props.Add(new DoubleProperty(PropertyNames.Scale, 1.0, 0.1, 100.0));
+        props.Add(new BooleanProperty(PropertyNames.RealTime, false));
+        props.Add(new Int32Property(PropertyNames.RefreshTick, 0, 0, int.MaxValue));
         return new PropertyCollection(props);
     }
 
@@ -266,6 +320,20 @@ internal sealed class GeoMapperEffect : PropertyBasedBitmapEffect
             double sc = newToken.GetProperty<DoubleProperty>(PropertyNames.Scale)!.Value;
 
             StartTcpListener(port, ox, oz, sc);
+
+            realtimeToken = newToken;
+            bool realtime = newToken.GetProperty<BooleanProperty>(PropertyNames.RealTime)!.Value;
+
+            if (realtime && !isRealtimeEnabled)
+            {
+                isRealtimeEnabled = true;
+                StartRefreshTimer();
+            }
+            else if (!realtime && isRealtimeEnabled)
+            {
+                isRealtimeEnabled = false;
+                StopRefreshTimer();
+            }
         }
         base.OnSetToken(newToken);
     }

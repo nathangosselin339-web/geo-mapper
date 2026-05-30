@@ -1,0 +1,18 @@
+{
+  "projectPath": ":",
+  "classpaths": {
+    "test": [
+      "C:\\Paint.net\\geo_mapper\\mod\\build\\classes\\java\\test",
+      "C:\\Paint.net\\geo_mapper\\mod\\build\\resources\\test"
+    ],
+    "client": [
+      "C:\\Paint.net\\geo_mapper\\mod\\build\\classes\\java\\client",
+      "C:\\Paint.net\\geo_mapper\\mod\\build\\resources\\client"
+    ],
+    "main": [
+      "C:\\Paint.net\\geo_mapper\\mod\\build\\classes\\java\\main",
+      "C:\\Paint.net\\geo_mapper\\mod\\build\\resources\\main",
+      "C:\\Paint.net\\geo_mapper\\mod\\build\\devlibs\\geomapping-1.0.0-dev.jar"
+    ]
+  }
+}
