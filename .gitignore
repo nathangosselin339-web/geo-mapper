@@ -1,3 +1,4 @@
+mod/build/
 __pycache__/
 *.pyc
 plugin/bin/
