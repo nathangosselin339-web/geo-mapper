@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+plugin/bin/
+plugin/obj/
+*.suo
+*.user
+*.deps.json

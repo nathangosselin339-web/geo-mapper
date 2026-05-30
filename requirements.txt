@@ -1,0 +1,4 @@
+Pillow>=10.0.0
+numpy>=1.24.0
+PyAutoGUI>=0.9.50
+pywin32>=306

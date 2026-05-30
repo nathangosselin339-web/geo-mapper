@@ -1,0 +1,61 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <PdnRoot>C:\Program Files\Paint.NET</PdnRoot>
+    <TargetFramework>net9.0-windows</TargetFramework>
+    <RootNamespace>GeoMapperPlugin</RootNamespace>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <UseWPF>true</UseWPF>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+    <Deterministic>False</Deterministic>
+    <AssemblyVersion>1.0.*</AssemblyVersion>
+    <NoWarn>1701;1702;CS7035;MSB3277</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="PaintDotNet.Base">
+      <HintPath>$(PdnRoot)\PaintDotNet.Base.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="PaintDotNet.ComponentModel">
+      <HintPath>$(PdnRoot)\PaintDotNet.ComponentModel.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="PaintDotNet.Core">
+      <HintPath>$(PdnRoot)\PaintDotNet.Core.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="PaintDotNet.Effects.Core">
+      <HintPath>$(PdnRoot)\PaintDotNet.Effects.Core.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="PaintDotNet.Fundamentals">
+      <HintPath>$(PdnRoot)\PaintDotNet.Fundamentals.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="PaintDotNet.Primitives">
+      <HintPath>$(PdnRoot)\PaintDotNet.Primitives.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="PaintDotNet.PropertySystem">
+      <HintPath>$(PdnRoot)\PaintDotNet.PropertySystem.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="PaintDotNet.Framework">
+      <HintPath>$(PdnRoot)\PaintDotNet.Framework.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="PaintDotNet.Windows">
+      <HintPath>$(PdnRoot)\PaintDotNet.Windows.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="PaintDotNet.Windows.Core">
+      <HintPath>$(PdnRoot)\PaintDotNet.Windows.Core.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="PaintDotNet.Windows.Framework">
+      <HintPath>$(PdnRoot)\PaintDotNet.Windows.Framework.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+</Project>
