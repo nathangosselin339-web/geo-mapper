@@ -285,41 +285,23 @@ internal sealed class GeoMapperEffect : PropertyBasedBitmapEffect
         var outputSubRegion = outputLock.AsRegionPtr();
         var outputRegion = outputSubRegion.OffsetView(-bounds.Location);
 
-        for (int y = bounds.Top; y < bounds.Bottom; y++)
+        foreach (var kvp in worldPlacements)
         {
             if (IsCancelRequested) return;
 
-            for (int x = bounds.Left; x < bounds.Right; x++)
-            {
-                bool hasPlacement = false;
-                string? placedBlock = null;
+            int pixelX = (int)((kvp.Key.wx - activeOriginX) / activeScale);
+            int pixelY = (int)((kvp.Key.wz - activeOriginZ) / activeScale);
 
-                int minWx = (int)(activeOriginX + x * activeScale);
-                int maxWx = (int)(activeOriginX + (x + 1) * activeScale - 1);
-                int minWz = (int)(activeOriginZ + y * activeScale);
-                int maxWz = (int)(activeOriginZ + (y + 1) * activeScale - 1);
+            if (pixelX < bounds.Left || pixelX >= bounds.Right ||
+                pixelY < bounds.Top || pixelY >= bounds.Bottom)
+                continue;
 
-                for (int wx = minWx; wx <= maxWx && !hasPlacement; wx++)
-                {
-                    for (int wz = minWz; wz <= maxWz && !hasPlacement; wz++)
-                    {
-                        if (worldPlacements.TryGetValue((wx, wz), out placedBlock))
-                        {
-                            hasPlacement = true;
-                        }
-                    }
-                }
-
-                if (hasPlacement)
-                {
-                    ColorBgra32 src = outputRegion[x, y];
-                    string expected = FindNearestBlock(src.R, src.G, src.B);
-                    if (placedBlock == expected)
-                        outputRegion[x, y] = GreenMark;
-                    else
-                        outputRegion[x, y] = RedMark;
-                }
-            }
+            ColorBgra32 src = outputRegion[pixelX, pixelY];
+            string expected = FindNearestBlock(src.R, src.G, src.B);
+            if (kvp.Value == expected)
+                outputRegion[pixelX, pixelY] = GreenMark;
+            else
+                outputRegion[pixelX, pixelY] = RedMark;
         }
     }
 }
